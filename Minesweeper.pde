@@ -1,7 +1,7 @@
 import de.bezier.guido.*;
-private int NUM_ROWS = 5;
-private int NUM_COLS = 5;
-private int NUM_MINES = 2;
+private int NUM_ROWS = 10;
+private int NUM_COLS = 10;
+private int NUM_MINES = 5;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList <MSButton> (); //ArrayList of just the minesweeper buttons that are mined
 
@@ -28,8 +28,7 @@ public void setMines()
       int r = (int)(Math.random()*NUM_ROWS);
       int c = (int)(Math.random()*NUM_COLS);
       if(!mines.contains(buttons[r][c])){
-        mines.add(new MSButton(r,c));
-        System.out.println(r+", "+c);
+        mines.add(buttons[r][c]);
       }
     }
 }
@@ -63,11 +62,11 @@ public int countMines(int row, int col)
     int numMines = 0;
     for(int r=row-1; r<row+2; r++){
       for(int c=col-1; c<col+2; c++){
-        if(isValid(r,c) && mines.contains(buttons[r][c]))
+        if(isValid(r,c) && mines.contains(buttons[r][c])){
           numMines++;
+        }
       }
     }
-    System.out.println(numMines);
     return numMines;
   }
 public class MSButton
@@ -100,10 +99,21 @@ public class MSButton
         }
         else{
           clicked = true;
-          if(mines.contains(this))
+          if(mines.contains(this)){
             displayLosingMessage();
-          else
+          }
+          else if(countMines(myRow,myCol)>0){
             setLabel(countMines(myRow,myCol));
+          }
+          else{
+            for(int r=myRow-1; r<myRow+2; r++){
+              for(int c=myCol-1; c<myCol+2; c++){
+                if(isValid(r,c) && buttons[r][c].isFlagged()==false){
+                  buttons[r][c].mousePressed();
+                }
+              }
+            }  
+          }
         }
     }
     public void draw () 
