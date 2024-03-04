@@ -4,12 +4,14 @@ private int NUM_COLS = 10;
 private int NUM_MINES = 5;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList <MSButton> (); //ArrayList of just the minesweeper buttons that are mined
+private int notMines = NUM_ROWS*NUM_COLS-NUM_MINES;
+private int count;
 
 void setup ()
 {
     size(400, 400);
     textAlign(CENTER,CENTER);
-    
+    System.out.println(notMines);
     // make the manager
     Interactive.make( this );
     
@@ -20,6 +22,7 @@ void setup ()
         buttons[i][j] = new MSButton(i,j);
     }
     setMines();
+    count = 0;
 }
 public void setMines()
 {
@@ -41,16 +44,29 @@ public void draw ()
 }
 public boolean isWon()
 {
-    //your code here
+     if(count==notMines){
+       return true;
+     }
     return false;
 }
 public void displayLosingMessage()
 {
-    //your code here
+    for(int i = 0; i<mines.size(); i++){
+      if(mines.get(i).clicked == false)
+        mines.get(i).mousePressed();
+      mines.get(i).setLabel("Bomb");
+    }
 }
 public void displayWinningMessage()
 {
-    //your code here
+    buttons[NUM_ROWS/2-1][NUM_COLS/2-3].setLabel("Y");
+    buttons[NUM_ROWS/2-1][NUM_COLS/2-2].setLabel("o");
+    buttons[NUM_ROWS/2-1][NUM_COLS/2-1].setLabel("u");
+    buttons[NUM_ROWS/2-1][NUM_COLS/2].setLabel("");
+    buttons[NUM_ROWS/2-1][NUM_COLS/2+1].setLabel("w");
+    buttons[NUM_ROWS/2-1][NUM_COLS/2+2].setLabel("o");
+    buttons[NUM_ROWS/2-1][NUM_COLS/2+3].setLabel("n");
+
 }
 public boolean isValid(int r, int c)
 {
@@ -97,7 +113,11 @@ public class MSButton
           if(clicked==false)
             flagged=!flagged;
         }
+        else if(flagged == true){
+        }
         else{
+          count++;
+          System.out.println(count);
           clicked = true;
           if(mines.contains(this)){
             displayLosingMessage();
@@ -108,7 +128,7 @@ public class MSButton
           else{
             for(int r=myRow-1; r<myRow+2; r++){
               for(int c=myCol-1; c<myCol+2; c++){
-                if(isValid(r,c) && buttons[r][c].isFlagged()==false){
+                if(isValid(r,c) && buttons[r][c].isFlagged()==false && buttons[r][c].clicked==false){
                   buttons[r][c].mousePressed();
                 }
               }
@@ -143,11 +163,7 @@ public class MSButton
     {
         return flagged;
     }
+    public void setFill(color rgb){
+        fill(rgb); 
+    }
 }
-
-
-
-
-
-
-
