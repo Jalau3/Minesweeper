@@ -11,7 +11,6 @@ void setup ()
 {
     size(400, 400);
     textAlign(CENTER,CENTER);
-    System.out.println(notMines);
     // make the manager
     Interactive.make( this );
     
@@ -117,7 +116,6 @@ public class MSButton
         }
         else{
           count++;
-          System.out.println(count);
           clicked = true;
           if(mines.contains(this)){
             displayLosingMessage();
